@@ -41,26 +41,26 @@ func (h *UserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
-	// Getting the body from the request into the user object
+	// Getting the request body into the user data
 	user := &user_data.InUser{}
 	ok := user_validation.ReadJson(w, r, user)
 	if !ok {
 		return
 	}
 
-	//validating user credentials
+	//validating user credential
 	err1 := user_validation.ValidateUser(user)
 	if err1 != nil {
 		http.Error(w, err1.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// Hashing the password
+	// Hashing password
 	hashedPassword := sha256.New()
 	hashedPassword.Write([]byte(user.Password))
 	user.Password = fmt.Sprintf("%x\n", hashedPassword.Sum(nil))
 
-	//Inserting user into the mongodb database
+	//Inserting user into mongodb
 	userResult, err := h.userCollection.InsertOne(context.Background(), user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -72,11 +72,11 @@ func (h *UserHandler) createUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) getUser(w http.ResponseWriter, r *http.Request) {
-	// Getting the id from the url
+	// Getting id from url
 	id := r.URL.Path[len("/users/"):]
 	fmt.Println(id)
 
-	// Retrieve user data from database and store in user
+	// Retrieve user data from db and store in user
 	user := &user_data.OutUser{}
 	userResult := h.userCollection.FindOne(context.Background(), bson.D{{"_id", id}})
 	err := userResult.Decode(user)

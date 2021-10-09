@@ -13,31 +13,27 @@ import (
 )
 
 func main() {
-	// Initializing the mongodb client
+	//connecting to client
 	mongoClient := connectToDb()
 
-	// connecting to collections
+	//connecting to collections
 	userCollection := mongoClient.Database("Insta").Collection("Users")
 	postCollection := mongoClient.Database("Insta").Collection("Posts")
 
-	//Initializing habdlers from each route
 	userHandler := post_user.NewUserHandler(userCollection)
 	postHandler := post_user.NewPostHandler(postCollection)
 	postUserHandler := post_user.NewPostUserHandler(postCollection)
 
-	//Routing the server using different handlers
 	http.Handle("/users/", userHandler)
 	http.Handle("/posts/", postHandler)
 	http.Handle("/posts/users/", postUserHandler)
 
-	// Starting the server at localhost:8080
 	fmt.Println("Starting the server at localhost:8080 ...")
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
 
-// Function to connect to the mongodb server
+//connecting to mongodb server
 func connectToDb() *mongo.Client {
-	// Connection to db at localhost:27017
 	mongoClient, err := mongo.Connect(context.Background(), &options.ClientOptions{
 		Auth: &options.Credential{
 			Username: "mongodb",

@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-// Function to validate user data
+//validating user data
 func ValidateUser(user *user_data.InUser) error {
 	if len(user.Id) == 0 {
 		return fmt.Errorf("user id is required")

@@ -24,10 +24,9 @@ func (h *PostUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		{
-			// getting id from url
+			//id from url
 			userId := r.URL.Path[len("/posts/users/"):]
 
-			// finding a set of posts of the user from databse
 			postCursor, err := h.postCollection.Find(context.Background(), bson.D{{"userId", userId}})
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)

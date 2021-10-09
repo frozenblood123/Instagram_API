@@ -7,7 +7,7 @@ import (
 )
 
 func ReadJson(w http.ResponseWriter, r *http.Request, v interface{}) bool {
-	// Getting the body from the request
+	//body from the request
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -31,6 +31,6 @@ func WriteJson(w http.ResponseWriter, r *http.Request, v interface{}) {
 		http.Error(w, "No data found for the request", http.StatusNotFound)
 		return
 	}
-	// writing json to client
+	//writing json to client
 	w.Write(jsonData)
 }
